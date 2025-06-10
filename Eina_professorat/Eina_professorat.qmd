@@ -1,0 +1,359 @@
+---
+title: "Previsió de professorat a secundària"
+author: Ivàlua
+format: dashboard
+server: shiny
+---
+
+
+```{r}
+#| context: setup
+
+# Importar dades
+
+# source(here::here("Scripts/Eina/Dataset prova.R"))
+
+library(tidyverse)
+library(dplyr)
+library(tidylog)
+library(ggplot2)
+library(lubridate)
+library(purrr)
+library(haven)
+library(readxl)
+library(readxl)
+library(here)
+library(janitor)
+library(ggpubr)
+library(stringdist)
+library(sjmisc)
+library(jtools)
+library(modelsummary)
+library(broom)
+library(gt)
+library(patchwork)
+library(sf)
+library(collapse)
+library(networkD3)
+library(labelled)
+library(openxlsx)
+library(arrow)
+library(tsibble) # ARIMA
+library(fable) # ARIMA
+library(shiny)
+library(ggiraph)
+
+# Nombre d'especialitats
+n_esp <- 5
+
+# OFERTA: Profes ----
+
+dades_profes <- data.frame(
+  curs = rep(2018:2032, times = n_esp),
+  # PROFES (escenari_interval)
+  baix_min = rnorm(15*n_esp,1000, 10)) %>% 
+  mutate(
+    baix_mig = baix_min + 10,
+    baix_max = baix_min + 20,
+    mig_min = baix_min + 30,
+    mig_mig = baix_min + 40,
+    mig_max = baix_min + 50,
+    alt_min = baix_min + 60,
+    alt_mig = baix_min + 70,
+    alt_max = baix_min + 80,
+    ) %>% 
+  # ESPECIALITAT
+  group_by(curs) %>% 
+  mutate(especialitat = row_number()) %>% 
+  ungroup() %>% 
+  relocate(especialitat, .after = curs) %>% 
+  # Reformar
+  pivot_longer(
+    3:last_col(),
+    names_to = "name",
+    values_to = "value") %>%
+  # Variables de característiques
+  mutate(escenari = case_when(
+    str_detect(name, "baix") == T ~ "Baix",
+    str_detect(name, "^mig") == T ~ "Mig",
+    str_detect(name, "alt") == T ~ "Alt")) %>% 
+  mutate(interval = case_when(
+    str_detect(name, "min$") == T ~ "Min",
+    str_detect(name, "mig$") == T ~ "Mig",
+    str_detect(name, "max$") == T ~ "Max")) %>%   
+  select(-name) %>% 
+  rename(profes = value) %>% 
+  # generar dos escenaris mes
+  uncount(2, .id = "expanded") %>% 
+  mutate(ratio = case_when(
+    expanded == 1 ~ "Flexible",
+    expanded == 2 ~ "Fix")) %>% 
+  select(-expanded) %>% 
+  # reformatejar per interval
+  pivot_wider(
+    names_from = "interval",
+    values_from = "profes") %>% 
+  mutate(across(c(Min:Max), ~ case_when(
+    ratio == "Flexible" ~ . + 10,
+    T ~ .)))
+
+
+
+
+dades_profes_tot <- dades_profes %>% 
+  group_by(curs, escenari, ratio) %>% 
+  summarise(
+    Min = sum(Min, na.rm = T),
+    Mig = sum(Mig, na.rm = T),
+    Max = sum(Max, na.rm = T)) %>% 
+  ungroup
+
+paleta_ivalua <- c("#002C4B", "#40617a", "#4A5C83", "#6782a1",
+                   "#74b2c0", "#81c6d0","#bcdfe4", "#e5e4e4",
+                   "#fac5c5", "#d72132", "#C0001B")
+
+library(extrafont)
+loadfonts(quiet = TRUE)
+
+theme_ivalua <- function(base_size = 11,
+                         base_family = "Roboto",
+                         base_line_size = base_size / 22,
+                         base_rect_size = base_size / 22,
+                         axis_text_x = TRUE,
+                         axis_text_y = FALSE,
+                         axis_titles = FALSE) {
+  t <- ggplot2::theme_classic(
+    base_size = base_size,
+    base_family = base_family,
+    base_line_size = base_line_size,
+    base_rect_size = base_rect_size
+  ) + # need to eventually change to replace()
+    ggplot2::theme(
+      plot.title = ggplot2::element_text(
+        family = base_family,
+        face = "bold",
+        hjust = 0
+      ),
+      plot.subtitle = ggplot2::element_text(
+        family = base_family,
+        face = "plain"
+      ),
+      plot.caption = ggplot2::element_text(
+        family = base_family,
+        size = base_size + 1,
+        hjust = 0,
+        vjust = 1.2,
+        face = "plain"
+      ),
+      axis.line.x = ggplot2::element_blank(),
+      axis.ticks.x = ggplot2::element_blank(),
+      axis.line.y = ggplot2::element_blank(),
+      axis.ticks.y = ggplot2::element_blank(),
+      strip.background = ggplot2::element_blank(),
+      legend.position = "bottom",
+      strip.text.x = ggplot2::element_text(
+        face = "bold",
+        size = base_size,
+        angle = 0
+      ),
+      strip.text.y.left = ggplot2::element_text(
+        face = "bold",
+        size = base_size,
+        angle = 0
+      ),
+      strip.text.y.right = ggplot2::element_text(
+        face = "bold",
+        size = base_size,
+        angle = 0
+      ),
+      axis.text.x = ggplot2::element_text(
+        family = base_family,
+        face = "plain",
+        size = base_size
+      ),
+      axis.text.y = ggplot2::element_text(
+        family = base_family,
+        face = "plain",
+        size = base_size
+      ),
+      axis.title.x = ggplot2::element_text(
+        family = base_family,
+        face = "plain"
+      ),
+      axis.title.y = ggplot2::element_text(
+        family = base_family,
+        face = "plain"
+      )
+    )
+  if(!axis_titles){
+    t <- t +
+      theme(axis.title.x = ggplot2::element_blank(),
+            axis.title.y = ggplot2::element_blank())
+  }
+  if(!axis_text_y){
+    t <- t +
+      theme(axis.text.y = ggplot2::element_blank())
+  }
+  if(!axis_text_x){
+    t <- t +
+      theme(axis.text.x = ggplot2::element_blank())
+  }
+  return(t)
+}
+
+
+
+
+
+```
+
+##  {.sidebar}
+
+```{r}
+
+#| context: server
+
+
+sliderInput("curs_range", "Selecciona els cursos:",
+            min = min(dades_profes$curs),
+            max = max(dades_profes$curs),
+            value = c(min(dades_profes$curs), max(dades_profes$curs)),
+            step = 1,
+            sep = "")
+
+checkboxGroupInput(
+  "escenari_filter", 
+  "Selecciona l'escenari:",
+  choices = levels(as.factor(dades_profes$escenari)),
+  selected = levels(as.factor(dades_profes$escenari))[1]
+)
+
+selectInput(
+  "ratio_filter", 
+  "Selecciona la ràtio:",
+  choices = levels(as.factor(dades_profes$ratio)),
+  selected = levels(as.factor(dades_profes$ratio))[1]
+)
+
+checkboxGroupInput(
+  "especialitat_filter", 
+  "Selecciona l'especialitat:",
+  choices = levels(as.factor(dades_profes$especialitat)),
+  selected = levels(as.factor(dades_profes$especilaitat))[1]
+)
+
+```
+
+## Gràfic de previsió {width = 50%}
+
+```{r}
+plotOutput("grafic_previsio")
+```
+
+```{r}
+#| context: server
+
+output$grafic_previsio <- renderPlot({
+  
+  req(input$curs_range)
+  
+  # Filtrar les dades segons els inputs seleccionats
+  dades_filtrades <- dades_profes_tot %>%
+    filter(escenari %in% input$escenari_filter,
+           ratio == input$ratio_filter,
+           curs >= input$curs_range[1],
+           curs <= input$curs_range[2])
+  
+  # Crear el gràfic amb ggplot
+  ggplot(dades_filtrades, aes(x = curs)) +
+    geom_ribbon(aes(ymin = Min, ymax = Max,
+                    fill = escenari),
+                alpha = .3) +
+    geom_line(aes(y = Mig,
+                  color = escenari),
+              linewidth = 1.2) +
+    labs(
+      title = "Professorat total",
+      x = "",
+      y = "",
+      fill = "Escenari",
+      color = "Escenari",
+      caption = "Font: Anàlisi de previsió de professorat"
+    ) +
+    theme_ivalua(axis_text_y = T) +
+    theme(
+      plot.title = element_text(size = 14, hjust = 0.5, face = "bold"),
+    ) +
+    scale_x_continuous(
+      breaks = seq(0,3000,1))+
+     scale_color_manual(values = c(
+    "Alt" = "#d72132",
+    "Baix" = "#74b2c0",
+    "Mig" = "#002C4B")) +
+    scale_fill_manual(values = c(
+    "Alt" = "#d72132",
+    "Baix" = "#74b2c0",
+    "Mig" = "#002C4B"
+  )) 
+    
+})
+```
+
+## Especialitat {width = 50%}
+
+```{r}
+plotOutput("grafic_especialitat")
+```
+
+```{r}
+#| context: server
+
+output$grafic_especialitat <- renderPlot({
+  
+  req(input$curs_range)
+  
+  # Filtrar les dades segons els inputs seleccionats
+  dades_filtrades <- dades_profes %>%
+    filter(escenari %in% input$escenari_filter,
+           especialitat %in% input$especialitat_filter,
+           ratio == input$ratio_filter,
+           curs >= input$curs_range[1],
+           curs <= input$curs_range[2])
+  
+  # Crear el gràfic amb ggplot
+  ggplot(dades_filtrades, aes(x = curs)) +
+    geom_ribbon(aes(ymin = Min, ymax = Max,
+                    fill = escenari),
+                alpha = .3) +
+    geom_line(aes(y = Mig,
+                  color = escenari),
+              linewidth = 1.2) +
+    labs(
+      title = "Professorat per especialitat",
+      x = "",
+      y = "",
+      caption = "Font: Anàlisi de previsió de professorat"
+    ) +
+    theme_ivalua(axis_text_y = T) +
+    theme(
+      plot.title = element_text(size = 14, hjust = 0.5, face = "bold"),
+    ) +
+    scale_x_continuous(
+      breaks = seq(0,3000,1))+
+    # scale_y_continuous(
+    #   limits = c(4500,5500)) +
+     scale_color_manual(values = c(
+    "Alt" = "#d72132",
+    "Baix" = "#74b2c0",
+    "Mig" = "#002C4B")) +
+    scale_fill_manual(values = c(
+    "Alt" = "#d72132",
+    "Baix" = "#74b2c0",
+    "Mig" = "#002C4B"
+    )) +
+    facet_wrap(~especialitat,
+               scales = "free_y",
+               ncol = 2)
+  
+})
+```

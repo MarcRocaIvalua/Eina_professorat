@@ -1,0 +1,13 @@
+name: Eina_professorat
+title: Eina_professorat
+username: marcrocaivalua
+account: marcrocaivalua
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 14911243
+bundleId: 10428946
+url: https://marcrocaivalua.shinyapps.io/Eina_professorat/
+version: 1
+quarto_version: 1.5.57
+quarto_engines: knitr
+serverRender: FALSE
