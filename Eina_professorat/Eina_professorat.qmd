@@ -134,42 +134,13 @@ theme_ivalua <- function(base_size = 11,
 }
 
 
-anys <- 2018:2032
-oferta <- seq(1000, 1500, length.out = length(anys))   # augmenta cada any
-demanda <- seq(1600, 1000, length.out = length(anys))  # disminueix cada any
-
-# Crear el data frame
-panell <- data.frame(
-  any = anys,
-  oferta = round(oferta),
-  demanda = round(demanda)) %>%
-  # mutate(demanda = demanda + 1000) %>%
-  uncount(5, .id = "especialitat") %>%
-  uncount(2, .id = "ratio") %>%
-  mutate(ratio = ifelse(
-    ratio == 1,
-    "Fixe",
-    "Flexible")) %>%
-  uncount(3, .id = "escenari_entrada") %>%
-  mutate(escenari_entrada = case_when(
-    escenari_entrada == 1 ~ "Baix",
-    escenari_entrada == 2 ~ "Mig",
-    escenari_entrada == 3 ~ "Alt")) %>%
-  uncount(3, .id = "escenari_alumnes") %>%
-  mutate(escenari_alumnes = case_when(
-    escenari_alumnes == 1 ~ "Baix",
-    escenari_alumnes == 2 ~ "Mig",
-    escenari_alumnes == 3 ~ "Alt")) %>%
-  uncount(2, .id = "concertada_privada") %>%
-  mutate(concertada_privada = case_when(
-    concertada_privada == 1 ~ "Pública",
-    concertada_privada == 2 ~ "Concertada"))
+panell <- read_excel("Secundària_dades_eina.xlsx")
 
 panell_tot <- panell %>% 
-  group_by(any, ratio, escenari_entrada,
+  group_by(curs, ratio, escenari_entrada,
            escenari_alumnes,concertada_privada) %>% 
   summarise(
-    across(.cols = c(oferta, demanda),
+    across(.cols = c(personal_disponible, personal_necessari),
            .fns = sum))
 
 
@@ -183,9 +154,9 @@ panell_tot <- panell %>%
 
 
 sliderInput("curs_range", "Selecciona els cursos:",
-            min = min(panell$any),
-            max = max(panell$any),
-            value = c(min(panell$any), max(panell$any)),
+            min = min(panell$curs),
+            max = max(panell$curs),
+            value = c(min(panell$curs), max(panell$curs)),
             step = 1,
             sep = "")
 
@@ -248,73 +219,73 @@ output$grafic_total <- renderPlot({
            escenari_entrada == input$escenari_entrada_filter,
            escenari_alumnes  == input$escenari_alumnes_filter,
            concertada_privada == input$concertada_filter,
-           any >= input$curs_range[1],
-           any <= input$curs_range[2]) %>% 
+           curs >= input$curs_range[1],
+           curs <= input$curs_range[2]) %>% 
     ungroup()
   
   # Crear el gràfic amb ggplot
   dades_filtrades %>%
-  ggplot(aes(x = any)) +
+  ggplot(aes(x = curs)) +
   geom_line(
-    data = dades_filtrades %>% filter(any >= 2025),
-    aes(y = oferta),
+    data = dades_filtrades %>% filter(curs >= 2025),
+    aes(y = personal_disponible),
     size = 1,
     linetype = "dashed",
     color = paleta_ivalua[1]) +
   geom_line(
-    data = dades_filtrades %>% filter(any <= 2025),
-    aes(y = oferta, color = "Oferta"),
+    data = dades_filtrades %>% filter(curs <= 2025),
+    aes(y = personal_disponible, color = "personal_disponible"),
     size = 1) +
   geom_line(
-    data = dades_filtrades %>% filter(any >= 2025),
-    aes(y = demanda),
+    data = dades_filtrades %>% filter(curs >= 2025),
+    aes(y = personal_necessari),
     size = 1,
     color = paleta_ivalua[10],
     linetype = "dashed") +
   geom_line(
-    data = dades_filtrades %>% filter(any <= 2025),
-    aes(y = demanda, color = "Demanda"),
+    data = dades_filtrades %>% filter(curs <= 2025),
+    aes(y = personal_necessari, color = "personal_necessari"),
     size = 1) +
-  scale_color_manual(values = c("Demanda" =  paleta_ivalua[10],
-                                "Oferta" = paleta_ivalua[1])) +
+  scale_color_manual(values = c("personal_necessari" =  paleta_ivalua[10],
+                                "personal_disponible" = paleta_ivalua[1])) +
   geom_ribbon(
-    data = dades_filtrades %>% filter(oferta > demanda),
-    aes(ymin = demanda, ymax = oferta),
+    data = dades_filtrades %>% filter(personal_disponible < personal_necessari),
+    aes(ymin = personal_necessari, ymax = personal_disponible),
               fill = paleta_ivalua[11], alpha = .3) +
   # Linea en la intersecció
   geom_vline(xintercept = dades_filtrades %>%
                ungroup() %>% 
-               filter(oferta > demanda) %>%
-               mutate(any = as.numeric(any)) %>% 
-               slice_min(any) %>% 
-               pull(any),
+               filter(personal_disponible < personal_necessari) %>%
+               mutate(curs = as.numeric(curs)) %>% 
+               slice_min(curs) %>% 
+               pull(curs),
              linetype = "dashed",
              alpha = .8) +
-  # # Any d'intersecció
+  # # curs d'intersecció
   geom_text(aes(
-    x = ifelse(dades_filtrades$oferta > dades_filtrades$demanda,
-               dades_filtrades %>% filter(oferta > demanda) %>% slice_min(any) %>% pull(any) + .5,
-               min(dades_filtrades$any)),
-    y = max(dades_filtrades$demanda),
-    label = ifelse(dades_filtrades$oferta > dades_filtrades$demanda,
-                   dades_filtrades %>% filter(oferta > demanda) %>% slice_min(any) %>% pull(any),
+    x = ifelse(dades_filtrades$personal_disponible < dades_filtrades$personal_necessari,
+               dades_filtrades %>% filter(personal_disponible < personal_necessari) %>% slice_min(curs) %>% pull(curs) + .5,
+               min(dades_filtrades$curs)),
+    y = max(dades_filtrades$personal_necessari),
+    label = ifelse(dades_filtrades$personal_disponible < dades_filtrades$personal_necessari,
+                   dades_filtrades %>% filter(personal_disponible < personal_necessari) %>% slice_min(curs) %>% pull(curs),
                    "")))  +
   # # # Alerta
   geom_text(aes(
-    x = ifelse(dades_filtrades$oferta > dades_filtrades$demanda,
-               dades_filtrades %>% filter(oferta > demanda) %>% slice_min(any) %>% pull(any) + 3,
-               min(dades_filtrades$any)),
-    y = ifelse(dades_filtrades$oferta > dades_filtrades$demanda,
-               dades_filtrades %>% filter(oferta > demanda) %>% slice_min(oferta) %>% pull(oferta),
-               min(dades_filtrades$any)),
-    label = ifelse(dades_filtrades$oferta > dades_filtrades$demanda,
+    x = ifelse(dades_filtrades$personal_disponible < dades_filtrades$personal_necessari,
+               dades_filtrades %>% filter(personal_disponible < personal_necessari) %>% slice_min(curs) %>% pull(curs) + 3,
+               min(dades_filtrades$curs)),
+    y = ifelse(dades_filtrades$personal_disponible < dades_filtrades$personal_necessari,
+               dades_filtrades %>% filter(personal_disponible < personal_necessari) %>% slice_min(personal_disponible) %>% pull(personal_disponible),
+               min(dades_filtrades$curs)),
+    label = ifelse(dades_filtrades$personal_disponible < dades_filtrades$personal_necessari,
                    "Dèficit de professorat",
                    ""),
     size = 44),
     color = paleta_ivalua[11]) +
   scale_y_continuous(limits = c(
-    (min(min(dades_filtrades$oferta), min(dades_filtrades$demanda))),
-    (max(max(dades_filtrades$oferta), max(dades_filtrades$demanda))))) +
+    (min(min(dades_filtrades$personal_disponible), min(dades_filtrades$personal_necessari))),
+    (max(max(dades_filtrades$personal_disponible), max(dades_filtrades$personal_necessari))))) +
   theme_ivalua(axis_text_y = T) +
   labs(color = "")
 
@@ -343,70 +314,59 @@ output$grafic_especialitat <- renderPlot({
            escenari_alumnes  == input$escenari_alumnes_filter,
            concertada_privada == input$concertada_filter,
            especialitat %in% input$especialitat_filter,
-           any >= input$curs_range[1],
-           any <= input$curs_range[2])
+           curs >= input$curs_range[1],
+           curs <= input$curs_range[2])
   
   # Crear el gràfic amb ggplot
   dades_filtrades %>%
-  ggplot(aes(x = any)) +
+  ggplot(aes(x = curs)) +
   geom_line(
-    data = dades_filtrades %>% filter(any >= 2025),
-    aes(y = oferta),
+    data = dades_filtrades %>% filter(curs >= 2025),
+    aes(y = personal_disponible),
     size = 1,
     linetype = "dashed",
     color = paleta_ivalua[1]) +
   geom_line(
-    data = dades_filtrades %>% filter(any <= 2025),
-    aes(y = oferta, color = "Oferta"),
+    data = dades_filtrades %>% filter(curs <= 2025),
+    aes(y = personal_disponible, color = "personal_disponible"),
     size = 1) +
   geom_line(
-    data = dades_filtrades %>% filter(any >= 2025),
-    aes(y = demanda),
+    data = dades_filtrades %>% filter(curs >= 2025),
+    aes(y = personal_necessari),
     size = 1,
     color = paleta_ivalua[10],
     linetype = "dashed") +
   geom_line(
-    data = dades_filtrades %>% filter(any <= 2025),
-    aes(y = demanda, color = "Demanda"),
+    data = dades_filtrades %>% filter(curs <= 2025),
+    aes(y = personal_necessari, color = "personal_necessari"),
     size = 1) +
-  scale_color_manual(values = c("Demanda" =  paleta_ivalua[10],
-                                "Oferta" = paleta_ivalua[1])) +
+  scale_color_manual(values = c("personal_necessari" =  paleta_ivalua[10],
+                                "personal_disponible" = paleta_ivalua[1])) +
   geom_ribbon(
-    data = dades_filtrades %>% filter(oferta > demanda),
-    aes(ymin = demanda, ymax = oferta),
+    data = dades_filtrades %>% filter(personal_disponible < personal_necessari),
+    aes(ymin = personal_necessari, ymax = personal_disponible),
               fill = paleta_ivalua[11], alpha = .3) +
   # Linea en la intersecció
-  geom_vline(xintercept = dades_filtrades %>% filter(oferta > demanda) %>% slice_min(any) %>% pull(any),
+  geom_vline(xintercept = dades_filtrades %>% filter(personal_disponible < personal_necessari) %>% slice_min(curs) %>% pull(curs),
              linetype = "dashed",
              alpha = .8) +
-  # Any d'intersecció
-  geom_text(aes(
-    x = ifelse(dades_filtrades$oferta > dades_filtrades$demanda,
-               dades_filtrades %>% filter(oferta > demanda) %>% slice_min(any) %>% pull(any) + .5,
-               min(dades_filtrades$any)),
-    y = max(dades_filtrades$demanda),
-    label = ifelse(dades_filtrades$oferta > dades_filtrades$demanda,
-                   dades_filtrades %>% filter(oferta > demanda) %>% slice_min(any) %>% pull(any),
-                   "")))  +
-  # # Alerta
+  # curs d'intersecció
   # geom_text(aes(
-  #   x = ifelse(dades_filtrades$oferta > dades_filtrades$demanda,
-  #              dades_filtrades %>% filter(oferta > demanda) %>% slice_min(any) %>% pull(any) + 3,
-  #              min(dades_filtrades$any)),
-  #   y = ifelse(dades_filtrades$oferta > dades_filtrades$demanda,
-  #              dades_filtrades %>% filter(oferta > demanda) %>% slice_min(oferta) %>% pull(oferta),
-  #              min(dades_filtrades$any)),
-  #   label = ifelse(dades_filtrades$oferta > dades_filtrades$demanda,
-  #                  "Dèficit de professorat",
-  #                  "")),
-  #   color = paleta_ivalua[11]) +
-  scale_y_continuous(limits = c(
-    (min(min(dades_filtrades$oferta), min(dades_filtrades$demanda))),
-    (max(max(dades_filtrades$oferta), max(dades_filtrades$demanda))))) +
+  #   x = ifelse(dades_filtrades$personal_disponible < dades_filtrades$personal_necessari,
+  #              dades_filtrades %>% filter(personal_disponible < personal_necessari) %>% slice_min(curs) %>% pull(curs) + .5,
+  #              min(dades_filtrades$curs)),
+  #   y = max(dades_filtrades$personal_necessari),
+  #   label = ifelse(dades_filtrades$personal_disponible < dades_filtrades$personal_necessari,
+  #                  dades_filtrades %>% filter(personal_disponible < personal_necessari) %>% slice_min(curs) %>% pull(curs),
+  #                  "")))  +
+  # scale_y_continuous(limits = c(
+  #   (min(min(dades_filtrades$personal_disponible), min(dades_filtrades$personal_necessari))),
+  #   (max(max(dades_filtrades$personal_disponible), max(dades_filtrades$personal_necessari))))) +
   theme_ivalua(axis_text_y = T) +
   labs(color = "") +
-    facet_wrap(~especialitat,
-               ncol = 3)
+  facet_wrap(~especialitat,
+             scales = "free_y",
+             ncol = 3)
 
     
 })
