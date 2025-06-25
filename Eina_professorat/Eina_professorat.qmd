@@ -134,7 +134,7 @@ theme_ivalua <- function(base_size = 11,
 }
 
 
-panell <- read_excel("Secundària_dades_eina.xlsx")
+panell <- read_excel("Secundària_dades_eina_correcció.xlsx")
 
 panell_tot <- panell %>% 
   group_by(curs, ratio, escenari_entrada,
@@ -162,14 +162,14 @@ sliderInput("curs_range", "Selecciona els cursos:",
 
 selectInput(
   "ratio_filter", 
-  "Selecciona els escenaris:",
+  "Selecciona la ràtio alumnat-professorat:",
   choices = levels(as.factor(panell$ratio)),
   selected = levels(as.factor(panell$ratio))[1]
 )
 
 selectInput(
   "escenari_entrada_filter", 
-  "Selecciona l'escenari d'entrada:",
+  "Selecciona l'escenari d'entrades a la borsa:",
   choices = levels(as.factor(panell$escenari_entrada)),
   selected = levels(as.factor(panell$escenari_entrada))[1]
 )
@@ -225,69 +225,44 @@ output$grafic_total <- renderPlot({
   
   # Crear el gràfic amb ggplot
   dades_filtrades %>%
-  ggplot(aes(x = curs)) +
-  geom_line(
-    data = dades_filtrades %>% filter(curs >= 2025),
-    aes(y = personal_disponible),
-    size = 1,
-    linetype = "dashed",
-    color = paleta_ivalua[1]) +
-  geom_line(
-    data = dades_filtrades %>% filter(curs <= 2025),
-    aes(y = personal_disponible, color = "personal_disponible"),
-    size = 1) +
-  geom_line(
-    data = dades_filtrades %>% filter(curs >= 2025),
-    aes(y = personal_necessari),
-    size = 1,
-    color = paleta_ivalua[10],
-    linetype = "dashed") +
-  geom_line(
-    data = dades_filtrades %>% filter(curs <= 2025),
-    aes(y = personal_necessari, color = "personal_necessari"),
-    size = 1) +
-  scale_color_manual(values = c("personal_necessari" =  paleta_ivalua[10],
-                                "personal_disponible" = paleta_ivalua[1])) +
-  geom_ribbon(
-    data = dades_filtrades %>% filter(personal_disponible < personal_necessari),
-    aes(ymin = personal_necessari, ymax = personal_disponible),
-              fill = paleta_ivalua[11], alpha = .3) +
-  # Linea en la intersecció
-  geom_vline(xintercept = dades_filtrades %>%
-               ungroup() %>% 
-               filter(personal_disponible < personal_necessari) %>%
-               mutate(curs = as.numeric(curs)) %>% 
-               slice_min(curs) %>% 
-               pull(curs),
-             linetype = "dashed",
-             alpha = .8) +
-  # # curs d'intersecció
-  geom_text(aes(
-    x = ifelse(dades_filtrades$personal_disponible < dades_filtrades$personal_necessari,
-               dades_filtrades %>% filter(personal_disponible < personal_necessari) %>% slice_min(curs) %>% pull(curs) + .5,
-               min(dades_filtrades$curs)),
-    y = max(dades_filtrades$personal_necessari),
-    label = ifelse(dades_filtrades$personal_disponible < dades_filtrades$personal_necessari,
-                   dades_filtrades %>% filter(personal_disponible < personal_necessari) %>% slice_min(curs) %>% pull(curs),
-                   "")))  +
-  # # # Alerta
-  geom_text(aes(
-    x = ifelse(dades_filtrades$personal_disponible < dades_filtrades$personal_necessari,
-               dades_filtrades %>% filter(personal_disponible < personal_necessari) %>% slice_min(curs) %>% pull(curs) + 3,
-               min(dades_filtrades$curs)),
-    y = ifelse(dades_filtrades$personal_disponible < dades_filtrades$personal_necessari,
-               dades_filtrades %>% filter(personal_disponible < personal_necessari) %>% slice_min(personal_disponible) %>% pull(personal_disponible),
-               min(dades_filtrades$curs)),
-    label = ifelse(dades_filtrades$personal_disponible < dades_filtrades$personal_necessari,
-                   "Dèficit de professorat",
-                   ""),
-    size = 44),
-    color = paleta_ivalua[11]) +
-  scale_y_continuous(limits = c(
-    (min(min(dades_filtrades$personal_disponible), min(dades_filtrades$personal_necessari))),
-    (max(max(dades_filtrades$personal_disponible), max(dades_filtrades$personal_necessari))))) +
-  theme_ivalua(axis_text_y = T) +
-  labs(color = "")
+    ggplot(aes(x = curs)) +
+    geom_line(
+      data = dades_filtrades %>% filter(curs >= 2025),
+      aes(y = personal_disponible),
+      size = 1.5,
+      linetype = "dashed",
+      color = paleta_ivalua[1]) +
+    geom_line(
+      data = dades_filtrades %>% filter(curs <= 2025),
+      aes(y = personal_disponible, color = "Personal disponible"),
+      size = 1.5) +
+    geom_line(
+      data = dades_filtrades %>% filter(curs >= 2025),
+      aes(y = personal_necessari),
+      size = 1.5,
+      color = paleta_ivalua[10],
+      linetype = "dashed") +
+    geom_line(
+      data = dades_filtrades %>% filter(curs <= 2025),
+      aes(y = personal_necessari, color = "Personal necessari"),
+      size = 1.5) +
+    scale_color_manual(values = c("Personal necessari" =  paleta_ivalua[10],
+                                  "Personal disponible" = paleta_ivalua[1])) +
+    geom_ribbon(
+      data = dades_filtrades %>% filter(personal_disponible < personal_necessari),
+      aes(ymin = personal_necessari, ymax = personal_disponible),
+                fill = paleta_ivalua[11], alpha = .3) +
+    scale_y_continuous(limits = c(
+      (min(min(dades_filtrades$personal_disponible), min(dades_filtrades$personal_necessari))),
+      (max(max(dades_filtrades$personal_disponible), max(dades_filtrades$personal_necessari))))) +
+    theme_ivalua(axis_text_y = T) +
+    labs(color = "") +
+    scale_x_continuous(breaks = seq(0,10000,1)) +
+    theme(legend.text = element_text(size = 16),
+          axis.text.x = element_text(size = 14),
+          axis.text.y = element_text(size = 14)) +
+    scale_y_continuous(expand = expansion(mult = c(0.2, 0.2)))
+    
 
     
 })
@@ -307,6 +282,11 @@ output$grafic_especialitat <- renderPlot({
   
   req(input$curs_range)
   
+  validate(
+    need(length(input$especialitat_filter) > 0, "Si us plau, selecciona almenys una especialitat per veure el gràfic.")
+  )
+
+  
   # Filtrar les dades segons els inputs seleccionats
   dades_filtrades <- panell %>%
     filter(ratio == input$ratio_filter,
@@ -319,54 +299,42 @@ output$grafic_especialitat <- renderPlot({
   
   # Crear el gràfic amb ggplot
   dades_filtrades %>%
-  ggplot(aes(x = curs)) +
-  geom_line(
-    data = dades_filtrades %>% filter(curs >= 2025),
-    aes(y = personal_disponible),
-    size = 1,
-    linetype = "dashed",
-    color = paleta_ivalua[1]) +
-  geom_line(
-    data = dades_filtrades %>% filter(curs <= 2025),
-    aes(y = personal_disponible, color = "personal_disponible"),
-    size = 1) +
-  geom_line(
-    data = dades_filtrades %>% filter(curs >= 2025),
-    aes(y = personal_necessari),
-    size = 1,
-    color = paleta_ivalua[10],
-    linetype = "dashed") +
-  geom_line(
-    data = dades_filtrades %>% filter(curs <= 2025),
-    aes(y = personal_necessari, color = "personal_necessari"),
-    size = 1) +
-  scale_color_manual(values = c("personal_necessari" =  paleta_ivalua[10],
-                                "personal_disponible" = paleta_ivalua[1])) +
-  geom_ribbon(
-    data = dades_filtrades %>% filter(personal_disponible < personal_necessari),
-    aes(ymin = personal_necessari, ymax = personal_disponible),
-              fill = paleta_ivalua[11], alpha = .3) +
-  # Linea en la intersecció
-  geom_vline(xintercept = dades_filtrades %>% filter(personal_disponible < personal_necessari) %>% slice_min(curs) %>% pull(curs),
-             linetype = "dashed",
-             alpha = .8) +
-  # curs d'intersecció
-  # geom_text(aes(
-  #   x = ifelse(dades_filtrades$personal_disponible < dades_filtrades$personal_necessari,
-  #              dades_filtrades %>% filter(personal_disponible < personal_necessari) %>% slice_min(curs) %>% pull(curs) + .5,
-  #              min(dades_filtrades$curs)),
-  #   y = max(dades_filtrades$personal_necessari),
-  #   label = ifelse(dades_filtrades$personal_disponible < dades_filtrades$personal_necessari,
-  #                  dades_filtrades %>% filter(personal_disponible < personal_necessari) %>% slice_min(curs) %>% pull(curs),
-  #                  "")))  +
-  # scale_y_continuous(limits = c(
-  #   (min(min(dades_filtrades$personal_disponible), min(dades_filtrades$personal_necessari))),
-  #   (max(max(dades_filtrades$personal_disponible), max(dades_filtrades$personal_necessari))))) +
-  theme_ivalua(axis_text_y = T) +
-  labs(color = "") +
-  facet_wrap(~especialitat,
-             scales = "free_y",
-             ncol = 3)
+    ggplot(aes(x = curs)) +
+    geom_line(
+      data = dades_filtrades %>% filter(curs >= 2025),
+      aes(y = personal_disponible),
+      size = 1.5,
+      linetype = "dashed",
+      color = paleta_ivalua[1]) +
+    geom_line(
+      data = dades_filtrades %>% filter(curs <= 2025),
+      aes(y = personal_disponible, color = "Personal disponible"),
+      size = 1.5) +
+    geom_line(
+      data = dades_filtrades %>% filter(curs >= 2025),
+      aes(y = personal_necessari),
+      size = 1.5,
+      color = paleta_ivalua[10],
+      linetype = "dashed") +
+    geom_line(
+      data = dades_filtrades %>% filter(curs <= 2025),
+      aes(y = personal_necessari, color = "Personal necessari"),
+      size = 1.5) +
+    scale_color_manual(values = c("Personal necessari" =  paleta_ivalua[10],
+                                  "Personal disponible" = paleta_ivalua[1])) +
+    geom_ribbon(
+      data = dades_filtrades %>% filter(personal_disponible < personal_necessari),
+      aes(ymin = personal_necessari, ymax = personal_disponible),
+                fill = paleta_ivalua[11], alpha = .3) +
+    theme_ivalua(axis_text_y = T) +
+    labs(color = "") +
+    facet_wrap(~especialitat,
+               scales = "free_y",
+               ncol = 3) +
+    scale_x_continuous(breaks = seq(0,10000,2)) +
+    theme(legend.text = element_text(size = 16),
+          axis.text.x = element_text(size = 12),
+          axis.text.y = element_text(size = 12))
 
     
 })
