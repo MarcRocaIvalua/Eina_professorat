@@ -9,139 +9,9 @@ server: shiny
 ```{r}
 #| context: setup
 
-library(tidyverse)
-library(dplyr)
-library(tidylog)
-library(ggplot2)
-library(lubridate)
-library(purrr)
-library(haven)
-library(readxl)
-library(readxl)
-library(here)
-library(janitor)
-library(ggpubr)
-library(stringdist)
-library(sjmisc)
-library(jtools)
-library(modelsummary)
-library(broom)
-library(gt)
-library(patchwork)
-library(sf)
-library(collapse)
-library(networkD3)
-library(labelled)
-library(openxlsx)
-library(arrow)
-library(tsibble) # ARIMA
-library(fable) # ARIMA
-library(shiny)
-library(ggiraph)
+source("0. Libs.R")
 
-
-paleta_ivalua <- c("#002C4B", "#40617a", "#4A5C83", "#6782a1",
-                   "#74b2c0", "#81c6d0","#bcdfe4", "#e5e4e4",
-                   "#fac5c5", "#d72132", "#C0001B")
-
-library(extrafont)
-loadfonts(quiet = TRUE)
-
-theme_ivalua <- function(base_size = 11,
-                         base_family = "Roboto",
-                         base_line_size = base_size / 22,
-                         base_rect_size = base_size / 22,
-                         axis_text_x = TRUE,
-                         axis_text_y = FALSE,
-                         axis_titles = FALSE) {
-  t <- ggplot2::theme_classic(
-    base_size = base_size,
-    base_family = base_family,
-    base_line_size = base_line_size,
-    base_rect_size = base_rect_size
-  ) + # need to eventually change to replace()
-    ggplot2::theme(
-      plot.title = ggplot2::element_text(
-        family = base_family,
-        face = "bold",
-        hjust = 0
-      ),
-      plot.subtitle = ggplot2::element_text(
-        family = base_family,
-        face = "plain"
-      ),
-      plot.caption = ggplot2::element_text(
-        family = base_family,
-        size = base_size + 1,
-        hjust = 0,
-        vjust = 1.2,
-        face = "plain"
-      ),
-      axis.line.x = ggplot2::element_blank(),
-      axis.ticks.x = ggplot2::element_blank(),
-      axis.line.y = ggplot2::element_blank(),
-      axis.ticks.y = ggplot2::element_blank(),
-      strip.background = ggplot2::element_blank(),
-      legend.position = "bottom",
-      strip.text.x = ggplot2::element_text(
-        face = "bold",
-        size = base_size,
-        angle = 0
-      ),
-      strip.text.y.left = ggplot2::element_text(
-        face = "bold",
-        size = base_size,
-        angle = 0
-      ),
-      strip.text.y.right = ggplot2::element_text(
-        face = "bold",
-        size = base_size,
-        angle = 0
-      ),
-      axis.text.x = ggplot2::element_text(
-        family = base_family,
-        face = "plain",
-        size = base_size
-      ),
-      axis.text.y = ggplot2::element_text(
-        family = base_family,
-        face = "plain",
-        size = base_size
-      ),
-      axis.title.x = ggplot2::element_text(
-        family = base_family,
-        face = "plain"
-      ),
-      axis.title.y = ggplot2::element_text(
-        family = base_family,
-        face = "plain"
-      )
-    )
-  if(!axis_titles){
-    t <- t +
-      theme(axis.title.x = ggplot2::element_blank(),
-            axis.title.y = ggplot2::element_blank())
-  }
-  if(!axis_text_y){
-    t <- t +
-      theme(axis.text.y = ggplot2::element_blank())
-  }
-  if(!axis_text_x){
-    t <- t +
-      theme(axis.text.x = ggplot2::element_blank())
-  }
-  return(t)
-}
-
-
-panell <- read_excel("Secundària_dades_eina_correcció.xlsx")
-
-panell_tot <- panell %>% 
-  group_by(curs, ratio, escenari_entrada,
-           escenari_alumnes,concertada_privada) %>% 
-  summarise(
-    across(.cols = c(personal_disponible, personal_necessari),
-           .fns = sum))
+source("1. Funcions.R")
 
 
 ```
@@ -337,5 +207,196 @@ output$grafic_especialitat <- renderPlot({
           axis.text.y = element_text(size = 12))
 
     
+})
+```
+
+# Dades totals
+```{r}
+gt_output("dades_total")
+```
+
+
+```{r}
+#| context: server
+output$dades_total <- render_gt({
+  
+  req(input$curs_range)
+  
+  # Filtrar les dades segons els inputs seleccionats
+  dades_filtrades <- panell_tot %>%
+    filter(ratio == input$ratio_filter,
+           escenari_entrada == input$escenari_entrada_filter,
+           escenari_alumnes  == input$escenari_alumnes_filter,
+           concertada_privada == input$concertada_filter,
+           curs >= input$curs_range[1],
+           curs <= input$curs_range[2]) %>% 
+    ungroup()
+  
+  # Crear la taula amb gt
+  dades_filtrades %>%
+    select(curs, personal_disponible, personal_necessari) %>%
+    mutate(
+      diferencia = personal_disponible - personal_necessari,
+      percentatge_cobertura = round((personal_disponible / personal_necessari) * 100, 1)
+    ) %>%
+    gt() %>% 
+    tab_header(
+      title = "Previsió de professorat en total",
+      subtitle = paste("Cursos", min(dades_filtrades$curs), "a", max(dades_filtrades$curs))
+    ) %>%
+    cols_label(
+      curs = "Curs",
+      personal_disponible = "Personal disponible",
+      personal_necessari = "Personal necessari",
+      diferencia = "Diferència",
+      percentatge_cobertura = "% Cobertura"
+    ) %>%
+    fmt_number(
+      columns = c(personal_disponible, personal_necessari, diferencia),
+      decimals = 0
+    ) %>%
+    fmt_number(
+      columns = percentatge_cobertura,
+      decimals = 1,
+      suffix = "%"
+    ) %>%
+    data_color(
+      columns = diferencia,
+      colors = function(x) {
+        ifelse(x >= 0,
+               scales::col_numeric(palette = c("#e5e4e4", "#74b2c0"),
+                                 domain = c(0, max(x[x >= 0], na.rm = TRUE)))(x),
+               scales::col_numeric(palette = c("#C0001B", "#fac5c5"),
+                                 domain = c(min(x[x < 0], na.rm = TRUE), 0))(x))
+      }
+    ) %>%
+    data_color(
+      columns = percentatge_cobertura,
+      colors = function(x) {
+        # Centrar en 100% (cobertura perfecta)
+        ifelse(x >= 100,
+               scales::col_numeric(palette = c("#e5e4e4", "#74b2c0"),
+                                 domain = c(100, max(x[x >= 100], na.rm = TRUE)))(x),
+               scales::col_numeric(palette = c("#C0001B", "#fac5c5"),
+                                 domain = c(min(x[x < 100], na.rm = TRUE), 100))(x))
+      }
+    ) %>%
+    tab_style(
+      style = cell_text(weight = "bold", align = "center"),
+      locations = cells_column_labels()
+    ) %>%
+    tab_style(
+      style = cell_fill(color = "#F5F5F5"),
+      locations = cells_column_labels()
+    ) %>%
+    tab_style(
+      style = cell_text(align = "center"),
+      locations = cells_body()
+    ) %>%
+    opt_interactive(
+      use_pagination = TRUE,
+      use_sorting = TRUE,
+      use_search = TRUE,
+      page_size_default = 20
+    )
+})
+```
+
+
+
+
+
+
+# Dades per especialitat
+```{r}
+gt_output("dades_especialitat")
+```
+
+
+```{r}
+#| context: server
+output$dades_especialitat <- render_gt({
+  
+  req(input$curs_range)
+  
+  # Filtrar les dades segons els inputs seleccionats
+  dades_filtrades <- panell %>%
+    filter(ratio == input$ratio_filter,
+           escenari_entrada == input$escenari_entrada_filter,
+           escenari_alumnes == input$escenari_alumnes_filter,
+           concertada_privada == input$concertada_filter,
+           especialitat %in% input$especialitat_filter,
+           curs >= input$curs_range[1],
+           curs <= input$curs_range[2]) %>%
+    arrange(especialitat, curs)
+  
+  # Crear la taula amb gt
+  dades_filtrades %>%
+    select(curs, especialitat, personal_disponible, personal_necessari) %>%
+    mutate(
+      diferencia = personal_disponible - personal_necessari,
+      percentatge_cobertura = round((personal_disponible / personal_necessari) * 100, 1)
+    ) %>%
+    gt() %>%
+    tab_header(
+      title = "Previsió de professorat per especialitat",
+      subtitle = paste("Cursos", min(dades_filtrades$curs), "a", max(dades_filtrades$curs))
+    ) %>%
+    cols_label(
+      curs = "Curs",
+      especialitat = "Especialitat",
+      personal_disponible = "Personal disponible",
+      personal_necessari = "Personal necessari",
+      diferencia = "Diferència",
+      percentatge_cobertura = "% Cobertura"
+    ) %>%
+    fmt_number(
+      columns = c(personal_disponible, personal_necessari, diferencia),
+      decimals = 0
+    ) %>%
+    fmt_number(
+      columns = percentatge_cobertura,
+      decimals = 1,
+      suffix = "%"
+    ) %>%
+    data_color(
+      columns = diferencia,
+      colors = function(x) {
+        ifelse(x >= 0, 
+               scales::col_numeric(palette = c("#e5e4e4", "#74b2c0"), 
+                                 domain = c(0, max(x[x >= 0], na.rm = TRUE)))(x),
+               scales::col_numeric(palette = c("#C0001B", "#fac5c5"), 
+                                 domain = c(min(x[x < 0], na.rm = TRUE), 0))(x))
+      }
+    ) %>%
+    data_color(
+      columns = percentatge_cobertura,
+      colors = function(x) {
+        # Centrar en 100% (cobertura perfecta)
+        ifelse(x >= 100, 
+               scales::col_numeric(palette = c("#e5e4e4", "#74b2c0"), 
+                                 domain = c(100, max(x[x >= 100], na.rm = TRUE)))(x),
+               scales::col_numeric(palette = c("#C0001B", "#fac5c5"), 
+                                 domain = c(min(x[x < 100], na.rm = TRUE), 100))(x))
+      }
+    ) %>%
+   tab_style(
+      style = cell_text(weight = "bold", align = "center"),
+      locations = cells_column_labels()
+    ) %>%
+    tab_style(
+      style = cell_fill(color = "#F5F5F5"),
+      locations = cells_column_labels()
+    ) %>%
+    tab_style(
+      style = cell_text(align = "center"),
+      locations = cells_body()
+    ) %>%
+    opt_interactive(
+      use_pagination = TRUE,
+      use_sorting = TRUE,
+      use_search = TRUE,
+      page_size_default = 20
+    )
 })
 ```
