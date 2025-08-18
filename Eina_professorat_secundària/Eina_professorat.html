@@ -8,7 +8,7 @@
 
 <meta name="author" content="Ivàlua">
 
-<title>Previsió de professorat a secundària</title>
+<title>Model de Previsió de Necessitats de Professorat</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -59,12 +59,12 @@ ul.task-list li input[type="checkbox"] {
     <div class="navbar-brand-container">       
 
       <div class="navbar-title">
-        <div class="navbar-title-text"><a href="#">Previsió de professorat a secundària</a></div>
+        <div class="navbar-title-text"><a href="#">Model de Previsió de Necessitats de Professorat</a></div>
         
         <div class="navbar-author">Ivàlua</div>
       </div>
     </div>
-<div id="dashboard-collapse" class="navbar-collapse collapse"><ul class="navbar-nav navbar-nav-scroll me-auto" role="tablist"><li class="nav-item" role="presentation"><a id="tab-gràfic-total" class="nav-link active" data-bs-toggle="tab" role="tab" data-bs-target="#gràfic-total" data-scrolling="false" href="#gràfic-total" aria-controls="gràfic-total" aria-selected="true"><span class="nav-link-text">Gràfic total</span></a></li><li class="nav-item" role="presentation"><a id="tab-gràfic-per-especialitat" class="nav-link" data-bs-toggle="tab" role="tab" data-bs-target="#gràfic-per-especialitat" data-scrolling="false" href="#gràfic-per-especialitat" aria-controls="gràfic-per-especialitat" aria-selected="false"><span class="nav-link-text">Gràfic per especialitat</span></a></li></ul></div></div>
+<div id="dashboard-collapse" class="navbar-collapse collapse"><ul class="navbar-nav navbar-nav-scroll me-auto" role="tablist"><li class="nav-item" role="presentation"><a id="tab-gràfic-total" class="nav-link active" data-bs-toggle="tab" role="tab" data-bs-target="#gràfic-total" data-scrolling="false" href="#gràfic-total" aria-controls="gràfic-total" aria-selected="true"><span class="nav-link-text">Gràfic total</span></a></li><li class="nav-item" role="presentation"><a id="tab-gràfic-per-especialitat" class="nav-link" data-bs-toggle="tab" role="tab" data-bs-target="#gràfic-per-especialitat" data-scrolling="false" href="#gràfic-per-especialitat" aria-controls="gràfic-per-especialitat" aria-selected="false"><span class="nav-link-text">Gràfic per especialitat</span></a></li><li class="nav-item" role="presentation"><a id="tab-dades-totals" class="nav-link" data-bs-toggle="tab" role="tab" data-bs-target="#dades-totals" data-scrolling="false" href="#dades-totals" aria-controls="dades-totals" aria-selected="false"><span class="nav-link-text">Dades totals</span></a></li><li class="nav-item" role="presentation"><a id="tab-dades-per-especialitat" class="nav-link" data-bs-toggle="tab" role="tab" data-bs-target="#dades-per-especialitat" data-scrolling="false" href="#dades-per-especialitat" aria-controls="dades-per-especialitat" aria-selected="false"><span class="nav-link-text">Dades per especialitat</span></a></li></ul></div></div>
 </nav>
 </header>
 <div class="page-layout-custom quarto-dashboard-content bslib-gap-spacing html-fill-container bslib-page-fill quarto-dashboard-pages dashboard-sidebar-container">  
@@ -93,6 +93,36 @@ grid-auto-rows: minmax(0, 1fr);">
 <div class="card-body html-fill-item html-fill-container">
 <div class="cell-output-display html-fill-item html-fill-container">
 <div class="shiny-plot-output html-fill-item html-fill-container" id="grafic_especialitat" style="width:100%;height:400px;"></div>
+</div>
+</div>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+</div>
+</div><div id="dades-totals" class="dashboard-page tab-pane grid-skip html-fill-item html-fill-container" data-orientation="rows" aria-labelledby="tab-dades-totals">
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-rows: minmax(3em, 1fr); grid-auto-columns: minmax(0, 1fr);">
+<div class="card cell html-fill-item html-fill-container bslib-card" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-body html-fill-item html-fill-container">
+<div class="cell-output-display html-fill-item html-fill-container no-overflow-x">
+<div class="shiny-html-output gt_shiny html-fill-item html-fill-container" id="dades_total"></div>
+</div>
+</div>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+</div>
+</div><div id="dades-per-especialitat" class="dashboard-page tab-pane grid-skip html-fill-item html-fill-container" data-orientation="rows" aria-labelledby="tab-dades-per-especialitat">
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-rows: minmax(3em, 1fr); grid-auto-columns: minmax(0, 1fr);">
+<div class="card cell html-fill-item html-fill-container bslib-card" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-body html-fill-item html-fill-container">
+<div class="cell-output-display html-fill-item html-fill-container no-overflow-x">
+<div class="shiny-html-output gt_shiny html-fill-item html-fill-container" id="dades_especialitat"></div>
 </div>
 </div>
 <bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
@@ -162,110 +192,164 @@ grid-auto-rows: minmax(0, 1fr);">
 <div class="shiny-options-group">
 <div class="checkbox">
 <label>
-<input type="checkbox" name="especialitat_filter" value="ADC">
-<span>ADC</span>
+<input type="checkbox" name="especialitat_filter" value="Anglès" checked="checked">
+<span>Anglès</span>
 </label>
 </div>
 <div class="checkbox">
 <label>
-<input type="checkbox" name="especialitat_filter" value="AN">
-<span>AN</span>
+<input type="checkbox" name="especialitat_filter" value="Anglès (infantil i primària)">
+<span>Anglès (infantil i primària)</span>
 </label>
 </div>
 <div class="checkbox">
 <label>
-<input type="checkbox" name="especialitat_filter" value="CLA">
-<span>CLA</span>
+<input type="checkbox" name="especialitat_filter" value="Audició i llenguatge">
+<span>Audició i llenguatge</span>
 </label>
 </div>
 <div class="checkbox">
 <label>
-<input type="checkbox" name="especialitat_filter" value="CN">
-<span>CN</span>
+<input type="checkbox" name="especialitat_filter" value="Aula d'acollida">
+<span>Aula d'acollida</span>
 </label>
 </div>
 <div class="checkbox">
 <label>
-<input type="checkbox" name="especialitat_filter" value="DI">
-<span>DI</span>
+<input type="checkbox" name="especialitat_filter" value="Aula d'acollida (infantil i primària)">
+<span>Aula d'acollida (infantil i primària)</span>
 </label>
 </div>
 <div class="checkbox">
 <label>
-<input type="checkbox" name="especialitat_filter" value="ECO">
-<span>ECO</span>
+<input type="checkbox" name="especialitat_filter" value="Biologia i geologia">
+<span>Biologia i geologia</span>
 </label>
 </div>
 <div class="checkbox">
 <label>
-<input type="checkbox" name="especialitat_filter" value="EF">
-<span>EF</span>
+<input type="checkbox" name="especialitat_filter" value="Cultura clàssica">
+<span>Cultura clàssica</span>
 </label>
 </div>
 <div class="checkbox">
 <label>
-<input type="checkbox" name="especialitat_filter" value="FI">
-<span>FI</span>
+<input type="checkbox" name="especialitat_filter" value="Dibuix">
+<span>Dibuix</span>
 </label>
 </div>
 <div class="checkbox">
 <label>
-<input type="checkbox" name="especialitat_filter" value="FQ">
-<span>FQ</span>
+<input type="checkbox" name="especialitat_filter" value="Economia">
+<span>Economia</span>
 </label>
 </div>
 <div class="checkbox">
 <label>
-<input type="checkbox" name="especialitat_filter" value="GE">
-<span>GE</span>
+<input type="checkbox" name="especialitat_filter" value="Educació física">
+<span>Educació física</span>
 </label>
 </div>
 <div class="checkbox">
 <label>
-<input type="checkbox" name="especialitat_filter" value="LC">
-<span>LC</span>
+<input type="checkbox" name="especialitat_filter" value="Educació física (infantil i primària)">
+<span>Educació física (infantil i primària)</span>
 </label>
 </div>
 <div class="checkbox">
 <label>
-<input type="checkbox" name="especialitat_filter" value="LE">
-<span>LE</span>
+<input type="checkbox" name="especialitat_filter" value="Educació infantil">
+<span>Educació infantil</span>
 </label>
 </div>
 <div class="checkbox">
 <label>
-<input type="checkbox" name="especialitat_filter" value="MA">
-<span>MA</span>
+<input type="checkbox" name="especialitat_filter" value="Educació primària">
+<span>Educació primària</span>
 </label>
 </div>
 <div class="checkbox">
 <label>
-<input type="checkbox" name="especialitat_filter" value="MU">
-<span>MU</span>
+<input type="checkbox" name="especialitat_filter" value="Filosofia">
+<span>Filosofia</span>
 </label>
 </div>
 <div class="checkbox">
 <label>
-<input type="checkbox" name="especialitat_filter" value="PSI">
-<span>PSI</span>
+<input type="checkbox" name="especialitat_filter" value="Física i química">
+<span>Física i química</span>
 </label>
 </div>
 <div class="checkbox">
 <label>
-<input type="checkbox" name="especialitat_filter" value="SLE">
-<span>SLE</span>
+<input type="checkbox" name="especialitat_filter" value="Geografia i història">
+<span>Geografia i història</span>
 </label>
 </div>
 <div class="checkbox">
 <label>
-<input type="checkbox" name="especialitat_filter" value="TEC">
-<span>TEC</span>
+<input type="checkbox" name="especialitat_filter" value="Llengua castellana i literatura">
+<span>Llengua castellana i literatura</span>
 </label>
 </div>
 <div class="checkbox">
 <label>
-<input type="checkbox" name="especialitat_filter" value="UES">
-<span>UES</span>
+<input type="checkbox" name="especialitat_filter" value="Llengua catalana i literatura">
+<span>Llengua catalana i literatura</span>
+</label>
+</div>
+<div class="checkbox">
+<label>
+<input type="checkbox" name="especialitat_filter" value="Matemàtiques">
+<span>Matemàtiques</span>
+</label>
+</div>
+<div class="checkbox">
+<label>
+<input type="checkbox" name="especialitat_filter" value="Música">
+<span>Música</span>
+</label>
+</div>
+<div class="checkbox">
+<label>
+<input type="checkbox" name="especialitat_filter" value="Música (infantil i primària)">
+<span>Música (infantil i primària)</span>
+</label>
+</div>
+<div class="checkbox">
+<label>
+<input type="checkbox" name="especialitat_filter" value="Orientació educativa">
+<span>Orientació educativa</span>
+</label>
+</div>
+<div class="checkbox">
+<label>
+<input type="checkbox" name="especialitat_filter" value="Pedagogia terapèutica">
+<span>Pedagogia terapèutica</span>
+</label>
+</div>
+<div class="checkbox">
+<label>
+<input type="checkbox" name="especialitat_filter" value="Segona llengua estrangera">
+<span>Segona llengua estrangera</span>
+</label>
+</div>
+<div class="checkbox">
+<label>
+<input type="checkbox" name="especialitat_filter" value="Tecnologia">
+<span>Tecnologia</span>
+</label>
+</div>
+<div class="checkbox">
+<label>
+<input type="checkbox" name="especialitat_filter" value="Unitat d'educació especial">
+<span>Unitat d'educació especial</span>
+</label>
+</div>
+<div class="checkbox">
+<label>
+<input type="checkbox" name="especialitat_filter" value="Unitat d'educació especial (infantil i primària)">
+<span>Unitat d'educació especial (infantil i primària)</span>
 </label>
 </div>
 </div>
@@ -283,139 +367,9 @@ bslib.Sidebar.initCollapsibleAll()
 </div>
 <p>
 <script type="application/shiny-prerendered" data-context="server-start">
-library(tidyverse)
-library(dplyr)
-library(tidylog)
-library(ggplot2)
-library(lubridate)
-library(purrr)
-library(haven)
-library(readxl)
-library(readxl)
-library(here)
-library(janitor)
-library(ggpubr)
-library(stringdist)
-library(sjmisc)
-library(jtools)
-library(modelsummary)
-library(broom)
-library(gt)
-library(patchwork)
-library(sf)
-library(collapse)
-library(networkD3)
-library(labelled)
-library(openxlsx)
-library(arrow)
-library(tsibble) # ARIMA
-library(fable) # ARIMA
-library(shiny)
-library(ggiraph)
+source("0. Libs.R")
 
-
-paleta_ivalua <- c("#002C4B", "#40617a", "#4A5C83", "#6782a1",
-                   "#74b2c0", "#81c6d0","#bcdfe4", "#e5e4e4",
-                   "#fac5c5", "#d72132", "#C0001B")
-
-library(extrafont)
-loadfonts(quiet = TRUE)
-
-theme_ivalua <- function(base_size = 11,
-                         base_family = "Roboto",
-                         base_line_size = base_size / 22,
-                         base_rect_size = base_size / 22,
-                         axis_text_x = TRUE,
-                         axis_text_y = FALSE,
-                         axis_titles = FALSE) {
-  t <- ggplot2::theme_classic(
-    base_size = base_size,
-    base_family = base_family,
-    base_line_size = base_line_size,
-    base_rect_size = base_rect_size
-  ) + # need to eventually change to replace()
-    ggplot2::theme(
-      plot.title = ggplot2::element_text(
-        family = base_family,
-        face = "bold",
-        hjust = 0
-      ),
-      plot.subtitle = ggplot2::element_text(
-        family = base_family,
-        face = "plain"
-      ),
-      plot.caption = ggplot2::element_text(
-        family = base_family,
-        size = base_size + 1,
-        hjust = 0,
-        vjust = 1.2,
-        face = "plain"
-      ),
-      axis.line.x = ggplot2::element_blank(),
-      axis.ticks.x = ggplot2::element_blank(),
-      axis.line.y = ggplot2::element_blank(),
-      axis.ticks.y = ggplot2::element_blank(),
-      strip.background = ggplot2::element_blank(),
-      legend.position = "bottom",
-      strip.text.x = ggplot2::element_text(
-        face = "bold",
-        size = base_size,
-        angle = 0
-      ),
-      strip.text.y.left = ggplot2::element_text(
-        face = "bold",
-        size = base_size,
-        angle = 0
-      ),
-      strip.text.y.right = ggplot2::element_text(
-        face = "bold",
-        size = base_size,
-        angle = 0
-      ),
-      axis.text.x = ggplot2::element_text(
-        family = base_family,
-        face = "plain",
-        size = base_size
-      ),
-      axis.text.y = ggplot2::element_text(
-        family = base_family,
-        face = "plain",
-        size = base_size
-      ),
-      axis.title.x = ggplot2::element_text(
-        family = base_family,
-        face = "plain"
-      ),
-      axis.title.y = ggplot2::element_text(
-        family = base_family,
-        face = "plain"
-      )
-    )
-  if(!axis_titles){
-    t <- t +
-      theme(axis.title.x = ggplot2::element_blank(),
-            axis.title.y = ggplot2::element_blank())
-  }
-  if(!axis_text_y){
-    t <- t +
-      theme(axis.text.y = ggplot2::element_blank())
-  }
-  if(!axis_text_x){
-    t <- t +
-      theme(axis.text.x = ggplot2::element_blank())
-  }
-  return(t)
-}
-
-
-panell <- read_excel("Secundària_dades_eina_correcció.xlsx")
-
-panell_tot <- panell %>% 
-  group_by(curs, ratio, escenari_entrada,
-           escenari_alumnes,concertada_privada) %>% 
-  summarise(
-    across(.cols = c(personal_disponible, personal_necessari),
-           .fns = sum))
+source("1. Funcions.R")
 
 
 </script>
@@ -424,8 +378,8 @@ panell_tot <- panell %>%
 output$grafic_total <- renderPlot({
   
   req(input$curs_range)
-  
-  # Filtrar les dades segons els inputs seleccionats
+ 
+  # Filtrar les dades segons els inputs seleccionats 
   dades_filtrades <- panell_tot %>%
     filter(ratio == input$ratio_filter,
            escenari_entrada == input$escenari_entrada_filter,
@@ -471,9 +425,12 @@ output$grafic_total <- renderPlot({
     labs(color = "") +
     scale_x_continuous(breaks = seq(0,10000,1)) +
     theme(legend.text = element_text(size = 16),
-          axis.text.x = element_text(size = 14),
+          axis.text.x = element_text(
+            size = 14,
+            angle = 45, vjust = 1, hjust = 1),
           axis.text.y = element_text(size = 14)) +
-    scale_y_continuous(expand = expansion(mult = c(0.2, 0.2)))
+    scale_y_continuous(expand = expansion(mult = c(0.2, 0.2))) +
+    facet_wrap(~nivell)
     
 
     
@@ -499,6 +456,24 @@ output$grafic_especialitat <- renderPlot({
            especialitat %in% input$especialitat_filter,
            curs >= input$curs_range[1],
            curs <= input$curs_range[2])
+  
+  # limits de les ys
+ # lims_y <- panell %>%
+ #    filter(especialitat %in% input$especialitat_filter) %>%
+ #    select(especialitat, contains("personal")) %>% 
+ #    pivot_longer(
+ #      contains("personal"),
+ #      names_to = "name",
+ #      values_to = "value"
+ #    ) %>% 
+ #    group_by(especialitat) %>%
+ #    summarise(
+ #      ymin = min(value, na.rm = TRUE) * 0.95,  # Afegir marge inferior
+ #      ymax = max(value, na.rm = TRUE) * 1.05,  # Afegir marge superior
+ #      .groups = 'drop'
+ #    )
+  
+  
   
   # Crear el gràfic amb ggplot
   dades_filtrades %>%
@@ -531,6 +506,9 @@ output$grafic_especialitat <- renderPlot({
                 fill = paleta_ivalua[11], alpha = .3) +
     theme_ivalua(axis_text_y = T) +
     labs(color = "") +
+    # escales fixes
+    # geom_blank(data = lims_y, aes(y = ymin)) +
+    # geom_blank(data = lims_y, aes(y = ymax)) +
     facet_wrap(~especialitat,
                scales = "free_y",
                ncol = 3) +
@@ -540,6 +518,178 @@ output$grafic_especialitat <- renderPlot({
           axis.text.y = element_text(size = 12))
 
     
+})
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+output$dades_total <- render_gt({
+  
+  req(input$curs_range)
+  
+  # Filtrar les dades segons els inputs seleccionats
+  dades_filtrades <- panell_tot %>%
+    filter(ratio == input$ratio_filter,
+           escenari_entrada == input$escenari_entrada_filter,
+           escenari_alumnes  == input$escenari_alumnes_filter,
+           concertada_privada == input$concertada_filter,
+           curs >= input$curs_range[1],
+           curs <= input$curs_range[2]) %>% 
+    ungroup()
+  
+  # Crear la taula amb gt
+  dades_filtrades %>%
+    select(curs, personal_disponible, personal_necessari) %>%
+    mutate(
+      diferencia = personal_disponible - personal_necessari,
+      percentatge_cobertura = round((personal_disponible / personal_necessari) * 100, 1)
+    ) %>%
+    gt() %>% 
+    tab_header(
+      title = "Previsió de professorat en total",
+      subtitle = paste("Cursos", min(dades_filtrades$curs), "a", max(dades_filtrades$curs))
+    ) %>%
+    cols_label(
+      curs = "Curs",
+      personal_disponible = "Personal disponible",
+      personal_necessari = "Personal necessari",
+      diferencia = "Diferència",
+      percentatge_cobertura = "% Cobertura"
+    ) %>%
+    fmt_number(
+      columns = c(personal_disponible, personal_necessari, diferencia),
+      decimals = 0
+    ) %>%
+    fmt_number(
+      columns = percentatge_cobertura,
+      decimals = 1,
+      suffix = "%"
+    ) %>%
+    data_color(
+      columns = diferencia,
+      colors = function(x) {
+        ifelse(x >= 0,
+               scales::col_numeric(palette = c("#e5e4e4", "#74b2c0"),
+                                 domain = c(0, max(x[x >= 0], na.rm = TRUE)))(x),
+               scales::col_numeric(palette = c("#C0001B", "#fac5c5"),
+                                 domain = c(min(x[x < 0], na.rm = TRUE), 0))(x))
+      }
+    ) %>%
+    data_color(
+      columns = percentatge_cobertura,
+      colors = function(x) {
+        # Centrar en 100% (cobertura perfecta)
+        ifelse(x >= 100,
+               scales::col_numeric(palette = c("#e5e4e4", "#74b2c0"),
+                                 domain = c(100, max(x[x >= 100], na.rm = TRUE)))(x),
+               scales::col_numeric(palette = c("#C0001B", "#fac5c5"),
+                                 domain = c(min(x[x < 100], na.rm = TRUE), 100))(x))
+      }
+    ) %>%
+    tab_style(
+      style = cell_text(weight = "bold", align = "center"),
+      locations = cells_column_labels()
+    ) %>%
+    tab_style(
+      style = cell_fill(color = "#F5F5F5"),
+      locations = cells_column_labels()
+    ) %>%
+    tab_style(
+      style = cell_text(align = "center"),
+      locations = cells_body()
+    ) %>%
+    opt_interactive(
+      use_pagination = TRUE,
+      use_sorting = TRUE,
+      use_search = TRUE,
+      page_size_default = 20
+    )
+})
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+output$dades_especialitat <- render_gt({
+  
+  req(input$curs_range)
+  
+  # Filtrar les dades segons els inputs seleccionats
+  dades_filtrades <- panell %>%
+    filter(ratio == input$ratio_filter,
+           escenari_entrada == input$escenari_entrada_filter,
+           escenari_alumnes == input$escenari_alumnes_filter,
+           concertada_privada == input$concertada_filter,
+           especialitat %in% input$especialitat_filter,
+           curs >= input$curs_range[1],
+           curs <= input$curs_range[2]) %>%
+    arrange(especialitat, curs)
+  
+  # Crear la taula amb gt
+  dades_filtrades %>%
+    select(curs, especialitat, personal_disponible, personal_necessari) %>%
+    mutate(
+      diferencia = personal_disponible - personal_necessari,
+      percentatge_cobertura = round((personal_disponible / personal_necessari) * 100, 1)
+    ) %>%
+    gt() %>%
+    tab_header(
+      title = "Previsió de professorat per especialitat",
+      subtitle = paste("Cursos", min(dades_filtrades$curs), "a", max(dades_filtrades$curs))
+    ) %>%
+    cols_label(
+      curs = "Curs",
+      especialitat = "Especialitat",
+      personal_disponible = "Personal disponible",
+      personal_necessari = "Personal necessari",
+      diferencia = "Diferència",
+      percentatge_cobertura = "% Cobertura"
+    ) %>%
+    fmt_number(
+      columns = c(personal_disponible, personal_necessari, diferencia),
+      decimals = 0
+    ) %>%
+    fmt_number(
+      columns = percentatge_cobertura,
+      decimals = 1,
+      suffix = "%"
+    ) %>%
+    data_color(
+      columns = diferencia,
+      colors = function(x) {
+        ifelse(x >= 0, 
+               scales::col_numeric(palette = c("#e5e4e4", "#74b2c0"), 
+                                 domain = c(0, max(x[x >= 0], na.rm = TRUE)))(x),
+               scales::col_numeric(palette = c("#C0001B", "#fac5c5"), 
+                                 domain = c(min(x[x < 0], na.rm = TRUE), 0))(x))
+      }
+    ) %>%
+    data_color(
+      columns = percentatge_cobertura,
+      colors = function(x) {
+        # Centrar en 100% (cobertura perfecta)
+        ifelse(x >= 100, 
+               scales::col_numeric(palette = c("#e5e4e4", "#74b2c0"), 
+                                 domain = c(100, max(x[x >= 100], na.rm = TRUE)))(x),
+               scales::col_numeric(palette = c("#C0001B", "#fac5c5"), 
+                                 domain = c(min(x[x < 100], na.rm = TRUE), 100))(x))
+      }
+    ) %>%
+   tab_style(
+      style = cell_text(weight = "bold", align = "center"),
+      locations = cells_column_labels()
+    ) %>%
+    tab_style(
+      style = cell_fill(color = "#F5F5F5"),
+      locations = cells_column_labels()
+    ) %>%
+    tab_style(
+      style = cell_text(align = "center"),
+      locations = cells_body()
+    ) %>%
+    opt_interactive(
+      use_pagination = TRUE,
+      use_sorting = TRUE,
+      use_search = TRUE,
+      page_size_default = 20
+    )
 })
 </script>
  
@@ -577,7 +727,7 @@ ojs_define <- function(..., .session = shiny::getDefaultReactiveDomain()) {
 <!--/html_preserve-->
 <!--html_preserve-->
 <script type="application/shiny-prerendered" data-context="execution_dependencies">
-{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["packages"]}},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["packages","version"]},"class":{"type":"character","attributes":{},"value":["data.frame"]},"row.names":{"type":"integer","attributes":{},"value":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136]}},"value":[{"type":"character","attributes":{},"value":["abind","anytime","arrow","assertthat","backports","base","bit","bit64","broom","broom.mixed","bslib","cachem","car","carData","cellranger","class","classInt","cli","clisymbols","codetools","collapse","colorspace","compiler","data.table","data.tree","datasets","DBI","digest","distributional","dplyr","e1071","ellipsis","evaluate","extrafont","extrafontdb","fable","fabletools","farver","fastmap","forcats","Formula","furrr","future","generics","ggiraph","ggplot2","ggpubr","ggsignif","globals","glue","graphics","grDevices","grid","gt","gtable","haven","here","hms","htmltools","htmlwidgets","httpuv","igraph","insight","janitor","jquerylib","jsonlite","jtools","KernSmooth","knitr","labelled","later","lattice","lifecycle","listenv","lubridate","magrittr","memoise","methods","mime","modelsummary","munsell","networkD3","nlme","openxlsx","pander","parallel","parallelly","patchwork","pillar","pkgconfig","promises","proxy","purrr","R6","Rcpp","readr","readxl","rlang","rmarkdown","rprojroot","rstatix","rstudioapi","Rttf2pt1","sass","scales","sf","shiny","sjlabelled","sjmisc","snakecase","splines","stats","stringdist","stringi","stringr","systemfonts","tables","tibble","tidylog","tidyr","tidyselect","tidyverse","timechange","tools","tsibble","tzdb","units","utils","uuid","vctrs","withr","xfun","xml2","xtable","yaml","zip"]},{"type":"character","attributes":{},"value":["1.4-8","0.3.11","19.0.1.1","0.2.1","1.5.0","4.4.3","4.6.0","4.6.0-1","1.0.8","0.2.9.6","0.9.0","1.1.0","3.1-3","3.0-5","1.1.0","7.3-23","0.4-11","3.6.4","1.2.0","0.2-20","2.1.1","2.1-1","4.4.3","1.17.0","1.1.0","4.4.3","1.2.3","0.6.37","0.5.0","1.1.4","1.7-16","0.3.2","1.0.3","0.19","1.0","0.4.1","0.5.0","2.1.2","1.2.0","1.0.0","1.2-5","0.3.1","1.40.0","0.1.3","0.8.13","3.5.2","0.6.0","0.6.4","0.17.0","1.8.0","4.4.3","4.4.3","4.4.3","1.0.0","0.3.6","2.5.4","1.0.1","1.1.3","0.5.8.1","1.6.4","1.6.16","2.1.4","1.1.0","2.2.1","0.1.4","2.0.0","2.3.0","2.23-26","1.50","2.14.1","1.4.2","0.22-6","1.0.4","0.9.1","1.9.4","2.0.3","2.0.1","4.4.3","0.13","2.3.0","0.5.1","0.4.1","3.1-167","4.2.8","0.6.6","4.4.3","1.43.0","1.3.0","1.10.1","2.0.3","1.3.2","0.4-27","1.0.4","2.6.1","1.0.14","2.1.5","1.4.5","1.1.5","2.29","2.0.4","0.7.2","0.17.1","1.3.12","0.4.9","1.3.0","1.0-20","1.10.0","1.2.0","2.8.10","0.11.1","4.4.3","4.4.3","0.9.15","1.8.7","1.5.1","1.2.1","0.9.31","3.2.1","1.1.0","1.3.1","1.2.1","2.0.0","0.3.0","4.4.3","1.1.6","0.5.0","0.8-7","4.4.3","1.2-1","0.6.5","3.0.2","0.52","1.3.8","1.8-4","2.3.10","2.3.2"]}]}]}
+{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["packages"]}},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["packages","version"]},"class":{"type":"character","attributes":{},"value":["data.frame"]},"row.names":{"type":"integer","attributes":{},"value":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131]}},"value":[{"type":"character","attributes":{},"value":["abind","arrow","assertthat","backports","base","bit","bit64","broom","broom.mixed","bslib","cachem","car","carData","cellranger","class","classInt","cli","clisymbols","codetools","collapse","colorspace","compiler","data.table","data.tree","datasets","DBI","digest","dplyr","e1071","evaluate","extrafont","extrafontdb","farver","fastmap","forcats","Formula","furrr","future","generics","ggiraph","ggplot2","ggpubr","ggsignif","globals","glue","graphics","grDevices","grid","gt","gtable","haven","here","hms","htmltools","htmlwidgets","httpuv","igraph","insight","janitor","jquerylib","jsonlite","jtools","KernSmooth","knitr","labelled","later","lattice","lifecycle","listenv","lubridate","magrittr","memoise","methods","mime","modelsummary","munsell","networkD3","nlme","openxlsx","pander","parallel","parallelly","patchwork","pillar","pkgconfig","promises","proxy","purrr","R6","Rcpp","reactable","readr","readxl","rlang","rmarkdown","rprojroot","rstatix","rstudioapi","Rttf2pt1","sass","scales","sf","shiny","sjlabelled","sjmisc","snakecase","splines","stats","stringdist","stringi","stringr","systemfonts","tables","tibble","tidylog","tidyr","tidyselect","tidyverse","timechange","tools","tzdb","units","utils","uuid","vctrs","withr","xfun","xml2","xtable","yaml","zip"]},{"type":"character","attributes":{},"value":["1.4-8","19.0.1.1","0.2.1","1.5.0","4.4.3","4.6.0","4.6.0-1","1.0.8","0.2.9.6","0.9.0","1.1.0","3.1-3","3.0-5","1.1.0","7.3-23","0.4-11","3.6.4","1.2.0","0.2-20","2.1.1","2.1-1","4.4.3","1.17.0","1.1.0","4.4.3","1.2.3","0.6.37","1.1.4","1.7-16","1.0.3","0.19","1.0","2.1.2","1.2.0","1.0.0","1.2-5","0.3.1","1.40.0","0.1.3","0.8.13","3.5.2","0.6.0","0.6.4","0.17.0","1.8.0","4.4.3","4.4.3","4.4.3","1.0.0","0.3.6","2.5.4","1.0.1","1.1.3","0.5.8.1","1.6.4","1.6.16","2.1.4","1.1.0","2.2.1","0.1.4","2.0.0","2.3.0","2.23-26","1.50","2.14.1","1.4.2","0.22-6","1.0.4","0.9.1","1.9.4","2.0.3","2.0.1","4.4.3","0.13","2.3.0","0.5.1","0.4.1","3.1-167","4.2.8","0.6.6","4.4.3","1.43.0","1.3.0","1.10.1","2.0.3","1.3.2","0.4-27","1.0.4","2.6.1","1.0.14","0.4.4","2.1.5","1.4.5","1.1.5","2.29","2.0.4","0.7.2","0.17.1","1.3.12","0.4.9","1.3.0","1.0-20","1.10.0","1.2.0","2.8.10","0.11.1","4.4.3","4.4.3","0.9.15","1.8.7","1.5.1","1.2.1","0.9.31","3.2.1","1.1.0","1.3.1","1.2.1","2.0.0","0.3.0","4.4.3","0.5.0","0.8-7","4.4.3","1.2-1","0.6.5","3.0.2","0.52","1.3.8","1.8-4","2.3.10","2.3.2"]}]}]}
 </script>
 <!--/html_preserve-->
 

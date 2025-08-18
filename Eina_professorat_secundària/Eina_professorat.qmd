@@ -1,5 +1,5 @@
 ---
-title: "Previsió de professorat a secundària"
+title: "Model de Previsió de Necessitats de Professorat"
 author: Ivàlua
 format: dashboard
 server: shiny
