@@ -1,3 +1,6 @@
+
+# Colors i theme Ivàlua ----
+
 paleta_ivalua <- c("#002C4B", "#40617a", "#4A5C83", "#6782a1",
                    "#74b2c0", "#81c6d0","#bcdfe4", "#e5e4e4",
                    "#fac5c5", "#d72132", "#C0001B")
@@ -92,9 +95,18 @@ theme_ivalua <- function(base_size = 11,
 }
 
 
-panell <- read_excel("Secundària_dades_eina_correcció.xlsx") %>% 
+# Dades MPNP ----
+
+
+panell <- read_excel("Secundària_dades_eina_correcció.xlsx") %>%
+  mutate(nivell = "ESO i batxillerat") %>% 
+  bind_rows(read_excel("Primària_dades_eina.xlsx") %>% 
+              mutate(nivell = "Infantil i primària")) %>% 
   mutate(curs_character = paste0(as.character(curs), "-", as.character(curs + 1))) %>% 
   mutate(especialitat = case_when(
+    
+    # ESO i batxillerat
+    
     especialitat == "ADC" ~ "Aula d'acollida",
     especialitat == "AN" ~ "Anglès",
     especialitat == "CLA" ~ "Cultura clàssica",
@@ -113,11 +125,24 @@ panell <- read_excel("Secundària_dades_eina_correcció.xlsx") %>%
     especialitat == "SLE" ~ "Segona llengua estrangera",
     especialitat == "TEC" ~ "Tecnologia",
     especialitat == "UES" ~ "Unitat d'educació especial",
+    
+    # Infantil i primària
+    
+    especialitat == "AAP" ~ "Aula d'acollida (infantil i primària)",
+    especialitat == "ALL" ~ "Audició i llenguatge",
+    especialitat == "EES" ~ "Pedagogia terapèutica",
+    especialitat == "INF" ~ "Educació infantil",
+    especialitat == "PAN" ~ "Anglès (infantil i primària)",
+    especialitat == "PEF" ~ "Educació física (infantil i primària)",
+    especialitat == "PMU" ~ "Música (infantil i primària)",
+    especialitat == "PRI" ~ "Educació primària",
+    especialitat == "UEE" ~ "Unitat d'educació especial (infantil i primària)",
   ))
 
 panell_tot <- panell %>% 
   group_by(curs, ratio, escenari_entrada,
-           escenari_alumnes,concertada_privada) %>% 
+           escenari_alumnes,concertada_privada,
+           nivell) %>% 
   summarise(
     across(.cols = c(personal_disponible, personal_necessari),
            .fns = sum))

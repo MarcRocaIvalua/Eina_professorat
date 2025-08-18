@@ -62,12 +62,14 @@ checkboxGroupInput(
   "especialitat_filter", 
   "Selecciona l'especialitat:",
   choices = levels(as.factor(panell$especialitat)),
-  selected = levels(as.factor(panell$especilaitat))[1]
+  selected = levels(as.factor(panell$especialitat))[1]
 )
 
 
 
 ```
+
+
 
 # Gràfic total
 
@@ -82,8 +84,8 @@ plotOutput("grafic_total")
 output$grafic_total <- renderPlot({
   
   req(input$curs_range)
-  
-  # Filtrar les dades segons els inputs seleccionats
+ 
+  # Filtrar les dades segons els inputs seleccionats 
   dades_filtrades <- panell_tot %>%
     filter(ratio == input$ratio_filter,
            escenari_entrada == input$escenari_entrada_filter,
@@ -129,9 +131,12 @@ output$grafic_total <- renderPlot({
     labs(color = "") +
     scale_x_continuous(breaks = seq(0,10000,1)) +
     theme(legend.text = element_text(size = 16),
-          axis.text.x = element_text(size = 14),
+          axis.text.x = element_text(
+            size = 14,
+            angle = 45, vjust = 1, hjust = 1),
           axis.text.y = element_text(size = 14)) +
-    scale_y_continuous(expand = expansion(mult = c(0.2, 0.2)))
+    scale_y_continuous(expand = expansion(mult = c(0.2, 0.2))) +
+    facet_wrap(~nivell)
     
 
     
