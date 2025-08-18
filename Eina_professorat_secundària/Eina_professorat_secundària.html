@@ -64,7 +64,7 @@ ul.task-list li input[type="checkbox"] {
         <div class="navbar-author">Ivàlua</div>
       </div>
     </div>
-<div id="dashboard-collapse" class="navbar-collapse collapse"><ul class="navbar-nav navbar-nav-scroll me-auto" role="tablist"><li class="nav-item" role="presentation"><a id="tab-gràfic-total" class="nav-link active" data-bs-toggle="tab" role="tab" data-bs-target="#gràfic-total" data-scrolling="false" href="#gràfic-total" aria-controls="gràfic-total" aria-selected="true"><span class="nav-link-text">Gràfic total</span></a></li><li class="nav-item" role="presentation"><a id="tab-gràfic-per-especialitat" class="nav-link" data-bs-toggle="tab" role="tab" data-bs-target="#gràfic-per-especialitat" data-scrolling="false" href="#gràfic-per-especialitat" aria-controls="gràfic-per-especialitat" aria-selected="false"><span class="nav-link-text">Gràfic per especialitat</span></a></li><li class="nav-item" role="presentation"><a id="tab-dades-totals" class="nav-link" data-bs-toggle="tab" role="tab" data-bs-target="#dades-totals" data-scrolling="false" href="#dades-totals" aria-controls="dades-totals" aria-selected="false"><span class="nav-link-text">Dades totals</span></a></li><li class="nav-item" role="presentation"><a id="tab-dades-per-espcialitat" class="nav-link" data-bs-toggle="tab" role="tab" data-bs-target="#dades-per-espcialitat" data-scrolling="false" href="#dades-per-espcialitat" aria-controls="dades-per-espcialitat" aria-selected="false"><span class="nav-link-text">Dades per espcialitat</span></a></li></ul></div></div>
+<div id="dashboard-collapse" class="navbar-collapse collapse"><ul class="navbar-nav navbar-nav-scroll me-auto" role="tablist"><li class="nav-item" role="presentation"><a id="tab-gràfic-total" class="nav-link active" data-bs-toggle="tab" role="tab" data-bs-target="#gràfic-total" data-scrolling="false" href="#gràfic-total" aria-controls="gràfic-total" aria-selected="true"><span class="nav-link-text">Gràfic total</span></a></li><li class="nav-item" role="presentation"><a id="tab-gràfic-per-especialitat" class="nav-link" data-bs-toggle="tab" role="tab" data-bs-target="#gràfic-per-especialitat" data-scrolling="false" href="#gràfic-per-especialitat" aria-controls="gràfic-per-especialitat" aria-selected="false"><span class="nav-link-text">Gràfic per especialitat</span></a></li><li class="nav-item" role="presentation"><a id="tab-dades-totals" class="nav-link" data-bs-toggle="tab" role="tab" data-bs-target="#dades-totals" data-scrolling="false" href="#dades-totals" aria-controls="dades-totals" aria-selected="false"><span class="nav-link-text">Dades totals</span></a></li><li class="nav-item" role="presentation"><a id="tab-dades-per-especialitat" class="nav-link" data-bs-toggle="tab" role="tab" data-bs-target="#dades-per-especialitat" data-scrolling="false" href="#dades-per-especialitat" aria-controls="dades-per-especialitat" aria-selected="false"><span class="nav-link-text">Dades per especialitat</span></a></li></ul></div></div>
 </nav>
 </header>
 <div class="page-layout-custom quarto-dashboard-content bslib-gap-spacing html-fill-container bslib-page-fill quarto-dashboard-pages dashboard-sidebar-container">  
@@ -117,7 +117,7 @@ grid-auto-rows: minmax(0, 1fr);">
     </span>
 </bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
 </div>
-</div><div id="dades-per-espcialitat" class="dashboard-page tab-pane grid-skip html-fill-item html-fill-container" data-orientation="rows" aria-labelledby="tab-dades-per-espcialitat">
+</div><div id="dades-per-especialitat" class="dashboard-page tab-pane grid-skip html-fill-item html-fill-container" data-orientation="rows" aria-labelledby="tab-dades-per-especialitat">
 <div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-rows: minmax(3em, 1fr); grid-auto-columns: minmax(0, 1fr);">
 <div class="card cell html-fill-item html-fill-container bslib-card" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
 <div class="card-body html-fill-item html-fill-container">
@@ -282,8 +282,8 @@ grid-auto-rows: minmax(0, 1fr);">
 </div>
 <div class="checkbox">
 <label>
-<input type="checkbox" name="especialitat_filter" value="Segona llengua extrangera">
-<span>Segona llengua extrangera</span>
+<input type="checkbox" name="especialitat_filter" value="Segona llengua estrangera">
+<span>Segona llengua estrangera</span>
 </label>
 </div>
 <div class="checkbox">
@@ -400,6 +400,24 @@ output$grafic_especialitat <- renderPlot({
            curs >= input$curs_range[1],
            curs <= input$curs_range[2])
   
+  # limits de les ys
+ # lims_y <- panell %>%
+ #    filter(especialitat %in% input$especialitat_filter) %>%
+ #    select(especialitat, contains("personal")) %>% 
+ #    pivot_longer(
+ #      contains("personal"),
+ #      names_to = "name",
+ #      values_to = "value"
+ #    ) %>% 
+ #    group_by(especialitat) %>%
+ #    summarise(
+ #      ymin = min(value, na.rm = TRUE) * 0.95,  # Afegir marge inferior
+ #      ymax = max(value, na.rm = TRUE) * 1.05,  # Afegir marge superior
+ #      .groups = 'drop'
+ #    )
+  
+  
+  
   # Crear el gràfic amb ggplot
   dades_filtrades %>%
     ggplot(aes(x = curs)) +
@@ -431,6 +449,9 @@ output$grafic_especialitat <- renderPlot({
                 fill = paleta_ivalua[11], alpha = .3) +
     theme_ivalua(axis_text_y = T) +
     labs(color = "") +
+    # escales fixes
+    # geom_blank(data = lims_y, aes(y = ymin)) +
+    # geom_blank(data = lims_y, aes(y = ymax)) +
     facet_wrap(~especialitat,
                scales = "free_y",
                ncol = 3) +

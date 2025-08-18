@@ -43,17 +43,17 @@ theme_ivalua <- function(base_size = 11,
       legend.position = "bottom",
       strip.text.x = ggplot2::element_text(
         face = "bold",
-        size = base_size,
+        size = 14,
         angle = 0
       ),
       strip.text.y.left = ggplot2::element_text(
         face = "bold",
-        size = base_size,
+        size = 14,
         angle = 0
       ),
       strip.text.y.right = ggplot2::element_text(
         face = "bold",
-        size = base_size,
+        size = 14,
         angle = 0
       ),
       axis.text.x = ggplot2::element_text(
@@ -110,7 +110,7 @@ panell <- read_excel("Secundària_dades_eina_correcció.xlsx") %>%
     especialitat == "MA" ~ "Matemàtiques",
     especialitat == "MU" ~ "Música",
     especialitat == "PSI" ~ "Orientació educativa",
-    especialitat == "SLE" ~ "Segona llengua extrangera",
+    especialitat == "SLE" ~ "Segona llengua estrangera",
     especialitat == "TEC" ~ "Tecnologia",
     especialitat == "UES" ~ "Unitat d'educació especial",
   ))
