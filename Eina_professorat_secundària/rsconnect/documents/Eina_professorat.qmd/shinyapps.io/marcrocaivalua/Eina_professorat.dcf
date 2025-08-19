@@ -5,9 +5,10 @@ account: marcrocaivalua
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 15219821
-bundleId: 10785827
+bundleId: 10791380
 url: https://marcrocaivalua.shinyapps.io/Eina_professorat/
 version: 1
-quarto_version: 1.5.57
+quarto_version: 1.6.42
 quarto_engines: knitr
-serverRender: FALSE
+asMultiple: FALSE
+asStatic: FALSE

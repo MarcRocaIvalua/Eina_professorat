@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.57">
+<meta name="generator" content="quarto-1.6.42">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -30,10 +30,10 @@ ul.task-list li input[type="checkbox"] {
 <script src="Eina_professorat_files/libs/quarto-html/tippy.umd.min.js"></script>
 <script src="Eina_professorat_files/libs/quarto-html/anchor.min.js"></script>
 <link href="Eina_professorat_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="Eina_professorat_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="Eina_professorat_files/libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="Eina_professorat_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="Eina_professorat_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="Eina_professorat_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="Eina_professorat_files/libs/bootstrap/bootstrap-f9c3a980a829ab9d6a74b295b7269fb0.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script src="Eina_professorat_files/libs/quarto-dashboard/quarto-dashboard.js"></script>
 <script src="Eina_professorat_files/libs/quarto-dashboard/stickythead.js"></script>
 <script src="Eina_professorat_files/libs/quarto-dashboard/datatables.min.js" kdttablesentinel="true"></script>
@@ -389,6 +389,10 @@ output$grafic_total <- renderPlot({
            curs <= input$curs_range[2]) %>% 
     ungroup()
   
+  last_obs <- dades_filtrades %>% 
+    filter(curs == max(curs))
+    
+  
   # Crear el gràfic amb ggplot
   dades_filtrades %>%
     ggplot(aes(x = curs)) +
@@ -396,8 +400,29 @@ output$grafic_total <- renderPlot({
       data = dades_filtrades %>% filter(curs >= 2025),
       aes(y = personal_disponible),
       size = 1.5,
-      linetype = "dashed",
+      linetype = "dotted",
       color = paleta_ivalua[1]) +
+    geom_segment(
+      data = last_obs %>% 
+        filter(personal_necessari > personal_disponible),
+      aes(x = curs, xend = curs,
+          y = personal_necessari, yend = personal_disponible),
+      color = paleta_ivalua[10],
+      size = 1.2) +
+    geom_point(
+      data = last_obs %>% 
+        filter(personal_necessari > personal_disponible),
+      aes(x = curs,
+          y = personal_necessari),
+      color = paleta_ivalua[10],
+      size = 4) +
+    geom_point(
+      data = last_obs %>% 
+        filter(personal_necessari > personal_disponible),
+      aes(x = curs,
+          y = personal_disponible),
+      color = paleta_ivalua[10],
+      size = 4) +
     geom_line(
       data = dades_filtrades %>% filter(curs <= 2025),
       aes(y = personal_disponible, color = "Personal disponible"),
@@ -407,7 +432,7 @@ output$grafic_total <- renderPlot({
       aes(y = personal_necessari),
       size = 1.5,
       color = paleta_ivalua[10],
-      linetype = "dashed") +
+      linetype = "dotted") +
     geom_line(
       data = dades_filtrades %>% filter(curs <= 2025),
       aes(y = personal_necessari, color = "Personal necessari"),
@@ -430,7 +455,8 @@ output$grafic_total <- renderPlot({
             angle = 45, vjust = 1, hjust = 1),
           axis.text.y = element_text(size = 14)) +
     scale_y_continuous(expand = expansion(mult = c(0.2, 0.2))) +
-    facet_wrap(~nivell)
+    facet_wrap(~nivell) 
+    
     
 
     
@@ -457,21 +483,8 @@ output$grafic_especialitat <- renderPlot({
            curs >= input$curs_range[1],
            curs <= input$curs_range[2])
   
-  # limits de les ys
- # lims_y <- panell %>%
- #    filter(especialitat %in% input$especialitat_filter) %>%
- #    select(especialitat, contains("personal")) %>% 
- #    pivot_longer(
- #      contains("personal"),
- #      names_to = "name",
- #      values_to = "value"
- #    ) %>% 
- #    group_by(especialitat) %>%
- #    summarise(
- #      ymin = min(value, na.rm = TRUE) * 0.95,  # Afegir marge inferior
- #      ymax = max(value, na.rm = TRUE) * 1.05,  # Afegir marge superior
- #      .groups = 'drop'
- #    )
+  last_obs <- dades_filtrades %>% 
+      filter(curs == max(curs))
   
   
   
@@ -482,8 +495,31 @@ output$grafic_especialitat <- renderPlot({
       data = dades_filtrades %>% filter(curs >= 2025),
       aes(y = personal_disponible),
       size = 1.5,
-      linetype = "dashed",
+      linetype = "dotted",
       color = paleta_ivalua[1]) +
+    geom_segment(
+      data = last_obs %>% 
+        filter(personal_necessari > personal_disponible),
+      aes(x = curs, xend = curs,
+          y = personal_necessari, yend = personal_disponible),
+      color = paleta_ivalua[10],
+      size = 1.2) +
+    geom_point(
+      data = last_obs %>% 
+        filter(personal_necessari > personal_disponible),
+      aes(x = curs,
+          y = personal_necessari),
+      color = paleta_ivalua[10],
+      size = 8,
+      shape = 95) +
+    geom_point(
+      data = last_obs %>% 
+        filter(personal_necessari > personal_disponible),
+      aes(x = curs,
+          y = personal_disponible),
+      color = paleta_ivalua[10],
+      size = 8,
+      shape = 95) +
     geom_line(
       data = dades_filtrades %>% filter(curs <= 2025),
       aes(y = personal_disponible, color = "Personal disponible"),
@@ -493,7 +529,7 @@ output$grafic_especialitat <- renderPlot({
       aes(y = personal_necessari),
       size = 1.5,
       color = paleta_ivalua[10],
-      linetype = "dashed") +
+      linetype = "dotted") +
     geom_line(
       data = dades_filtrades %>% filter(curs <= 2025),
       aes(y = personal_necessari, color = "Personal necessari"),
@@ -506,16 +542,13 @@ output$grafic_especialitat <- renderPlot({
                 fill = paleta_ivalua[11], alpha = .3) +
     theme_ivalua(axis_text_y = T) +
     labs(color = "") +
-    # escales fixes
-    # geom_blank(data = lims_y, aes(y = ymin)) +
-    # geom_blank(data = lims_y, aes(y = ymax)) +
     facet_wrap(~especialitat,
                scales = "free_y",
                ncol = 3) +
     scale_x_continuous(breaks = seq(0,10000,2)) +
     theme(legend.text = element_text(size = 16),
           axis.text.x = element_text(size = 12),
-          axis.text.y = element_text(size = 12))
+          axis.text.y = element_text(size = 12)) 
 
     
 })
@@ -814,8 +847,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   });
   clipboard.on('success', onCopySuccess);
   if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-    // For code content inside modals, clipBoardJS needs to be initialized with a container option
-    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
     const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
       text: getTextToCopy,
       container: window.document.getElementById('quarto-embedded-source-code-modal')
@@ -926,7 +957,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (window.Quarto?.typesetMath) {
         window.Quarto.typesetMath(note);
       }
-      // TODO in 1.5, we should make sure this works without a callout special case
       if (note.classList.contains("callout")) {
         return note.outerHTML;
       } else {
