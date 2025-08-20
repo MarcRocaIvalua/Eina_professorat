@@ -46,7 +46,7 @@ theme_ivalua <- function(base_size = 11,
       legend.position = "bottom",
       strip.text.x = ggplot2::element_text(
         face = "bold",
-        size = 14,
+        size = 14, 
         angle = 0
       ),
       strip.text.y.left = ggplot2::element_text(

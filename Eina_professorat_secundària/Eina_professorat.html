@@ -387,7 +387,8 @@ output$grafic_total <- renderPlot({
            concertada_privada == input$concertada_filter,
            curs >= input$curs_range[1],
            curs <= input$curs_range[2]) %>% 
-    ungroup()
+    ungroup() %>% 
+    mutate(nivell = factor(nivell, levels = c("Infantil i primària", "ESO i batxillerat")))
   
   last_obs <- dades_filtrades %>% 
     filter(curs == max(curs))
@@ -453,7 +454,9 @@ output$grafic_total <- renderPlot({
           axis.text.x = element_text(
             size = 14,
             angle = 45, vjust = 1, hjust = 1),
-          axis.text.y = element_text(size = 14)) +
+          axis.text.y = element_text(size = 14),
+          strip.text.x = element_text(size = 20),
+          ) +
     scale_y_continuous(expand = expansion(mult = c(0.2, 0.2))) +
     facet_wrap(~nivell) 
     
@@ -571,7 +574,7 @@ output$dades_total <- render_gt({
   
   # Crear la taula amb gt
   dades_filtrades %>%
-    select(curs, personal_disponible, personal_necessari) %>%
+    select(curs, nivell, personal_disponible, personal_necessari) %>%
     mutate(
       diferencia = personal_disponible - personal_necessari,
       percentatge_cobertura = round((personal_disponible / personal_necessari) * 100, 1)
@@ -583,6 +586,7 @@ output$dades_total <- render_gt({
     ) %>%
     cols_label(
       curs = "Curs",
+      nivell = "Nivell",
       personal_disponible = "Personal disponible",
       personal_necessari = "Personal necessari",
       diferencia = "Diferència",
