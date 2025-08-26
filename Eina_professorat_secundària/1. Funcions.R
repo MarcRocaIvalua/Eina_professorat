@@ -137,6 +137,10 @@ panell <- read_excel("Secundària_dades_eina_correcció.xlsx") %>%
     especialitat == "PMU" ~ "Música (infantil i primària)",
     especialitat == "PRI" ~ "Educació primària",
     especialitat == "UEE" ~ "Unitat d'educació especial (infantil i primària)",
+  )) %>% 
+  mutate(ratio = case_when(
+    ratio == "Fixe" ~ "Fixa",
+    T ~ ratio
   ))
 
 panell_tot <- panell %>% 
